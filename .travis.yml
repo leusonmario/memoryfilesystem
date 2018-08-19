@@ -1,1 +1,25 @@
+
+sudo: required
 language: java
+
+jdk:
+  - oraclejdk8
+
+script:
+  - mvn clean cobertura:cobertura -Dtest=MacOsMemoryFileSystemTest#macOsNormalization -DfailIfNoTests=false
+
+before_deploy:
+- tar -zcvf coverage-result.tar.gz /home/travis/build/leusonmario/memoryfilesystem/target/site/cobertura
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "2r5jc/Qta9989k0tJhv2Fp0AGkzw/1n2SH8fvB/5BJOMTfIuV3L8fNeqeOccLUQykoc4oAeSt76cd0nagE6scNuEvDt7ZhNYaMF4/PM02QeztYR9pARp6NLI2F3P5FnkD7f0VrkuLtgVNlFJwAhGnEs+cqNCjY/eTcDxHwbAm11R9UdeMORMm95Gf3bt1trxYfvIUHXDL3KBLmI5ZPjKMTjltmowpBApWGUXzhqa5WzNvQwjZ1XR3QueP1lzBem+a8H/B9kkYhhU+UjnJFTvHw6MnxkGobjzNFfT4IdtNfvlvbndiRQESAkMh/smqz/G+HuZKtyK3XhyVrKDOzywrYDrlKJynsZu5f+9C4hgJXo0gToab7mNITj+VNs185Nk7z3HTWnpFTjT/yE3SR1edsaNAgE/BnYt7JjKnhQt9VnJo8sa0RB1D0a2It++jLWkC9yMU5/tc6bg8NapD9WAXUXCKIOTkMVEytiOdev0AkKvaHVWgnYqMq4fevWydAx7WeClBK+DnX+YVPeag3VDoZ3mK3eM5yvixaswYcu1N2eOBKzHINSz5wRfWsOMIVRUJxuiCT45cnKHulnQRmfv4SF4V43WCPk+Nqvy/mJ6u7kDGuKZPIlSClryYKQrMtLclUjyqRPWTb7KB8iOyglejR4N0QORDqfrbEaKNF2OlVg="
+
+
+  file: coverage-result.tar.gz
+  file_glob: true
+  overwrite: true
+  skip_cleanup: true
+  on:
+    tags: true
